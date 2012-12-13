@@ -3,6 +3,8 @@ package org.motechproject.demo.pillreminder.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+import org.motechproject.decisiontree.core.FlowSession;
 import org.motechproject.demo.pillreminder.PillReminderSettings;
 import org.motechproject.demo.pillreminder.support.DecisionTreeSessionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,26 @@ public class IvrController {
      * The CCXML will use this URL first to obtain the pin number for the patient. Once the user has successfully
      * entered a pin, they will be redirected to the decision tree
      */
-    @RequestMapping("/ivr")
+    @RequestMapping("/ivr/authenticate")
     public ModelAndView generateVxml(HttpServletRequest request, HttpServletResponse response) {
-        String motechId = request.getParameter("motechid");
-        String phoneNum = request.getParameter("phonenum");
-        String sessionId = reminder.registerNewDecisionTreeSession(phoneNum, motechId);
-
-        ModelAndView view = reminder.generateSecurityPinViewForSession(sessionId);
-        view.addObject("path", settings.getMotechUrl());
-        view.addObject("sessionId", sessionId);
-
-        return view;
+        return new ModelAndView("bad-pin");
+//        String verboiceCallId = request.getParameter("CallSid");
+//        String motechCallId = request.getParameter("motech_call_id");
+//        FlowSession session = null;
+//        ModelAndView view = null;
+//        if (StringUtils.isNotBlank(motechCallId)) {
+//            // this is the first request in the flow session
+//            session = reminder.updateSessionWithVerboiceId(motechCallId, verboiceCallId);
+//            reminder.generateSecurityPinViewForSession(session.getSessionId());
+//        } else {
+//            String digits = request.getParameter("Digits");
+//            view = new ModelAndView("bad-pin.vm");
+//        }
+//
+//        view.addObject("path", settings.getMotechUrl());
+//        view.addObject("sessionId", session.getSessionId());
+//
+//        return view;
     }
 
     /**

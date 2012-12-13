@@ -57,7 +57,7 @@ public class DecisionTreeSessionHandlerTest {
         
         ModelAndView view = reminder.generateSecurityPinViewForSession("SessionId");
 
-        assertEquals("security-pin", view.getViewName());
+        assertEquals("bad-pin", view.getViewName());
         assertEquals(DecisionTreeSessionHandler.DEFAULT_PIN, view.getModel().get("pin").toString());
     }
 

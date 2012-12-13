@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say>Hello motech demo user. This is a pill reminder. To get started, please enter the 4 digit pin assigned to you.</Say>
+    <Gather action="$path/module/pillreminder-demo/authenticate" timeout="30" numDigits="4" />
+</Response>

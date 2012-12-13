@@ -1,15 +1,19 @@
 package org.motechproject.demo.pillreminder.support;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.motechproject.decisiontree.core.model.EventTransition;
 import org.motechproject.decisiontree.core.model.Node;
 import org.motechproject.decisiontree.core.model.Prompt;
 import org.motechproject.decisiontree.core.model.TextToSpeechPrompt;
 import org.motechproject.decisiontree.core.model.Transition;
 import org.motechproject.decisiontree.core.model.Tree;
 import org.motechproject.decisiontree.server.service.DecisionTreeService;
+import org.motechproject.demo.pillreminder.events.EventKeys;
+import org.motechproject.demo.pillreminder.events.Events;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +73,15 @@ public class DecisionTreeBuilder {
                                         new TextToSpeechPrompt().setMessage("If yes, then press 1. Otherwise press 3") })
                         .setTransitions(
                                 new Object[][] {
-                                        { "1", new PillTakenTransition() },
+                                        {
+                                                "1",
+                                                new EventTransition()
+                                                        .setEventSubject(Events.PATIENT_TOOK_DOSAGE)
+                                                        .setSessionKeysToIncludeInEvent(
+                                                                Arrays.asList(EventKeys.MOTECH_ID))
+                                                        .setDestinationNode(
+                                                                new Node().setPrompts(new TextToSpeechPrompt()
+                                                                        .setMessage("You answered yes. Thank you for your response."))) },
                                         {
                                                 "3",
                                                 new Transition()

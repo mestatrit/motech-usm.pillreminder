@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class DecisionTreeSessionHandler {
+    private static final String AUTHENTICATE_VIEW_NAME = "authenticate";
+
     private static final String MOTECH_ID_KEY = "motechId";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -84,7 +86,7 @@ public class DecisionTreeSessionHandler {
     }
 
     private ModelAndView createSecurityPinView(String sessionId, String pin) {
-        ModelAndView mv = new ModelAndView("security-pin");
+        ModelAndView mv = new ModelAndView(AUTHENTICATE_VIEW_NAME);
         mv.addObject("sessionId", sessionId);
         mv.addObject("pin", pin);
         return mv;
@@ -100,6 +102,11 @@ public class DecisionTreeSessionHandler {
         view.addObject("sessionId", sessionId);
 
         return view;
+    }
+
+    public FlowSession updateSessionWithVerboiceId(String motechCallId, String verboiceCallId) {
+        FlowSession flowSession = flowSessionService.getSession(motechCallId);
+        return flowSessionService.updateSessionId(flowSession.getSessionId(), verboiceCallId);
     }
 
 }

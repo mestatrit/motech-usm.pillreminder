@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ccxml version="1.0">
+    <var name="callsid" expr="session.values.callsid" />
+    <var name="numbertodial" expr="session.values.numbertodial" />
+    <var name="channel_guid" expr="'953917bc-6a35-ac81-eb34-7e44dee81a7c'" />
+    <var name="verboiceUrl" expr="'http://130.111.132.102:8080/'" />
+    <var name="callId" />
+
+    <eventprocessor>
+        <transition event="ccxml.loaded">
+            <send name="'TIMEOUT_REACHED'" target="session.id" delay="'80s'" />
+            <createcall dest="'tel:' + numbertodial" callerid="'8572848739'" timeout="'60s'" />
+        </transition>
+
+        <transition event="connection.progressing">
+            <assign name="callId" expr="event$.connectionid" />
+            <log expr="'***** CONNECTION PROGRESSING *****'" />
+        </transition>
+
+        <transition event="connection.connected">
+            <dialogstart src="verboiceUrl" namelist="callsid channel_guid" type="'application/voicexml+xml'" />
+        </transition>
+
+        <transition event="dialog.started">
+            <log expr="'***** DIALOG STARTED *****'" />
+        </transition>
+
+        <transition event="dialog.exit">
+            <log expr="'***** DIALOG EXITING *****'" />
+
+            <disconnect connectionid="callId" />
+        </transition>
+
+        <transition event="connection.disconnected">
+            <log expr="'***** CONNECTION DISCONNECTED *****'" />
+        </transition>
+
+        <transition event="connection.failed">
+            <log expr="'***** CONNECTION FAILED *****'" />
+        </transition>
+
+        <transition event="TIMEOUT_REACHED">
+            <log expr="'***** CALL TIME EXCEEDED *****'" />
+            <exit />
+        </transition>
+
+    </eventprocessor>
+</ccxml>
